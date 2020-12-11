@@ -8,8 +8,10 @@ Codes from [Christmas coding event](https://adventofcode.com/2019).
 
 * String.prototype.count *(count character occurences in an array)* - day 8
 
-* getShortest *(for simplyfying fraction - krácení zlomků)* - day 10
+* getShortest *(for simplifying fractions - krácení zlomků)* - day 10
 
 * getAngle *(counts angle from x and y coords with atan function)* - day 10
 
 * countPythagors *(counts the hypotenuse of a right-angled triangle)* - day 10
+
+* factorizeToPrimes *(factorizes number to primes - rozloží číslo na prvočísla)* - day 12
