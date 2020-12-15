@@ -163,9 +163,6 @@ const getInput = (tiles) => {
   return 0;
 };
 
-const testprogram = prepare(`1102,34915192,34915192,7,4,7,99,0`);
-
-
 let game = () => {
   data = prepare(data);
   console.log(runLoop(data, getInput));
