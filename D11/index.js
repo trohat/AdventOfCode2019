@@ -126,7 +126,9 @@ function* createLoopIterator(parProgram, inputFunction) {
 
 const runRobot = program => {
   
-  const blackFields = new Set();
+  const whiteFields = new Set();
+
+  whiteFields.add([0,0].toString());
   const visitedFields = new Set();
   let input;
   
@@ -143,14 +145,14 @@ const runRobot = program => {
     const robotPosition = [robotX, robotY].toString();
     visitedFields.add(robotPosition);
 
-    if (blackFields.has(robotPosition)) input = 0; else input = 1;
+    if (whiteFields.has(robotPosition)) input = 1; else input = 0;
 
     const iteratorResult = loopIterator.next();
 
     if (iteratorResult.done) break robotLoop;
     const [ paint, turn ] = iteratorResult.value;
 
-    if (paint === 1) blackFields.delete(robotPosition); else blackFields.add(robotPosition);
+    if (paint === 1) whiteFields.add(robotPosition); else whiteFields.delete(robotPosition);
 
     if (turn === 0) robotDirection = (robotDirection + 1) % 4; else robotDirection = (robotDirection + 3) % 4;
 
@@ -169,7 +171,7 @@ const runRobot = program => {
        break;
     }
   }
-  return blackFields;
+  return whiteFields;
 }
 
 const draw = pattern => {
@@ -177,7 +179,7 @@ const draw = pattern => {
     let str = "";
     for (let i = -5; i < 50; i++) {
       let pos = [i,j].toString();
-      if (pattern.has(pos)) str += " "; else str += "X";
+      if (pattern.has(pos)) str += "X"; else str += " ";
     }
     console.log(str);
   }
