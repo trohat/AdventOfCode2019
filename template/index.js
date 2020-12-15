@@ -2,21 +2,23 @@ console.log("funguju");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 
-inputdata = splitLines(inputdata);
-
-console.log(inputdata);
+const prepare = data => data;
 
 const task1 = (data) => {
-
+    
 };
 
 const task2 = data => {
- 
+    
 }
 
 let testdata = ``;
 
-testdata = splitLines(testdata);
+inputdata = prepare(splitLines(inputdata));
+
+console.log(inputdata);
+
+testdata = prepare(splitLines(testdata));
 
 console.log("");
 
