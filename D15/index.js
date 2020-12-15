@@ -127,7 +127,7 @@ const buildMaze = (xLength, yLength) => {
   for (let i = 0; i < yLength; i++) {
     maze.push([]);
     for (let j = 0; j < xLength; j++) {
-      maze[i].push({ cameFrom: false, beenHere: false, seen: -1, border: false, wall: false, oxygen: false, lowest: false });
+      maze[i].push({ cameFrom: false, beenHere: false, seen: -1, border: false, wall: false, oxygen: false, lowest: false, firstCycle: true });
     }
     maze[i][0].border = true;
     maze[i][xLength - 1].border = true;
@@ -141,17 +141,17 @@ const buildMaze = (xLength, yLength) => {
 };
 
 const runDroid = (program) => {
-  const maxX = 50;
-  const maxY = 50;
+  const maxX = 41;
+  const maxY = 41;
   const maze = buildMaze(maxX, maxY);
 
-  const startDroidX = Math.floor(maxX / 2);
-  const startDroidY = Math.floor(maxY / 2);
+  const startDroidX = Math.floor(maxX / 2)+1;
+  const startDroidY = Math.floor(maxY / 2)+1;
 
   maze[startDroidY][startDroidX].seen ++;
   maze[startDroidY][startDroidX].beenHere = true;
   maze[startDroidY][startDroidX].cameFrom = 0;
-  maze[startDroidY][startDroidX].lowest = 0;
+  //maze[startDroidY][startDroidX].lowest = 0;
 
   let droidX = startDroidX;
   let droidY = startDroidY;
@@ -169,6 +169,10 @@ const runDroid = (program) => {
     if (droidPosition.border) {
       console.error("I have hit the border!!");
       return errorCode;
+    }
+    if (droidPosition.seen === 4 && droidPosition.firstCycle) {
+      droidPosition.firstCycle = false;
+      droidPosition.seen = 0;
     }
     if (droidPosition.seen < 4) {
       droidGoingDirection =
@@ -211,6 +215,7 @@ const runDroid = (program) => {
     generalDirs.forEach( dirs => {
       if (maze[y+dirs[1]][x+dirs[0]].lowest !== false && maze[y+dirs[1]][x+dirs[0]].lowest < min) min = maze[y+dirs[1]][x+dirs[0]].lowest;
     })
+    if (min === 10000) return false;
     return min + 1;
   }
 
@@ -234,10 +239,8 @@ const runDroid = (program) => {
     }
 
     if (iteratorResult.value === 2) {
-      //moveDroid(droidGoingDirection);
       maze[droidY][droidX].oxygen = true;
-      //oxygenFound = true;
-      //break droidLoop;
+      maze[droidY][droidX].lowest = 0;
     }
 
   }
@@ -248,12 +251,12 @@ const draw = (pattern, x, y) => {
   for (let i = 0; i < pattern.length; i++) {
     let str = "";
     for (let j = 0; j < pattern[0].length; j++) {
-      let char = "  ";
-      if (pattern[i][j].wall) char = "XXX";
-      if (pattern[i][j].beenHere) char = pattern[i][j].lowest.toString().padStart(3, "0");
-      if (pattern[i][j].oxygen) char = "OOO";
-      if (i === y && j === x) char = " @ ";
-      if (i === 25 && j == 25) char = " _ ";
+      let char = "█████";
+      if (pattern[i][j].wall) char = "█████";
+      if (pattern[i][j].beenHere) char = " " + pattern[i][j].lowest.toString().padStart(3, "0") + " ";
+      if (pattern[i][j].oxygen) char = "OOOOO";
+      if (i === y && j === x) char = "  @  ";
+      if (i === 25 && j == 25) char = "  _  ";
       str += char;
     }
     console.log(str);
@@ -265,4 +268,19 @@ const [ maze, xRel, yRel, x, y ] = runDroid(program);
 draw(maze, x, y);
 console.log(xRel, yRel);
 
-//buildMaze(10, 10);
+const findMax = maze => {
+  let max = 0;
+  let myI, myJ;
+  for (let i = 0; i < maze.length; i++) {
+    for (let j = 0; j < maze[0].length; j++) {
+      if (maze[i][j].lowest !== false && maze[i][j].lowest > max) {
+          max = maze[i][j].lowest; 
+          myI = i;
+          myJ = j;
+      }
+    }
+  }
+  return [ max, myI, myJ ];
+}
+
+console.log(findMax(maze));
