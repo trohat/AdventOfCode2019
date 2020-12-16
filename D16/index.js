@@ -35,9 +35,24 @@ const task1 = (input) => {
 
 const task2 = input => {
 
+    const phases = 100;
+    const offset = +input.slice( 0, 7 );
+    if (offset < (input.length / 2)) console.warn("This does not work");
+
+    input = input.slice(offset).split("").map(d => +d);
+    const inputLength = input.length;
+
+    for (let phase = 0; phase < phases; phase++) {
+        let sum = 0;
+        for (let i = inputLength - 1; i >= 0; i--) {
+            sum += input[i];
+            input[i] = sum % 10;
+        }
+    }
+    return input.slice(0, 8).join("");
 }
 
-let testdata = `80871224585914546619083218645595`;
+let testdata = `12345678`;
 
 inputdata = inputdata;
 
@@ -50,11 +65,11 @@ console.log("");
 
 let testdata2 = `03036732577212944063491565474664`;
 
-//testdata2 = prepare(testdata2);
-//inputdata = prepare(inputdata);
+testdata2 = prepare(testdata2);
+inputdata = prepare(inputdata);
 
 //console.log(inputdata.length);
 
-//doEqualTest(task2(testdata2), "84462026");
+doEqualTest(task2(testdata2), "84462026");
 
-//console.log("Task 2: " + task2(inputdata));
+console.log("Task 2: " + task2(inputdata));
