@@ -120,9 +120,12 @@ function runLoop(parProgram, inputFunction) {
   return outputs;
 }
 
+let inputN = -1;
 const getInput = () => {
-  console.warn("Getting input");
-  return 0;
+  const nl = "\n";
+  const str = "A,B,A,B,C,B,A,C,B,C" + nl + "L,12,L,8,R,10,R,10" + nl + "L,6,L,4,L,12" + nl + "R,10,L,8,L,4,R,10" + nl + "n" + nl;
+  inputN++;
+  return str.charCodeAt(inputN);
 };
 
 const outputDataToGrid = data => {
@@ -154,8 +157,10 @@ const outputDataToGrid = data => {
 };
 
 findIntersections = grid => {
+  let first = true;
   const dirs = [ [ 1,0 ], [ -1,0 ], [ 0,1 ], [ 0,-1 ] ];
   let intersectionsTotal = 0;
+  let alignmentParameters = 0;
   for (let i = 1; i < grid.length - 1; i++) {
     for (let j = 1; j < grid[2].length-1; j++) {
         if (grid[i][j] === "#") {
@@ -165,14 +170,102 @@ findIntersections = grid => {
           }
           if (total === 4) {
             grid[i][j] = "O";
-            intersectionsTotal += (i-1) * (j-1);
-            console.log(i-1,j-1);
+            alignmentParameters += (i-1) * (j-1);
+            intersectionsTotal += 1;
           } 
+        }
+        if (grid[i][j] === "^") {
+          if (first) {
+            first = false;
+            console.log("Robot starting position:", i,j);
+          }
         }
     }
   }
   console.log("Intersections total: " + intersectionsTotal);
+  console.log("Alignment parameters: " + alignmentParameters);
 }
+
+const calculateRobotPath = (grid, robotY, robotX) => {
+  const dirs = [
+     { name: "S", coords: [ 1,0 ] },
+     { name: "N", coords: [ -1,0 ] },
+     { name: "E", coords: [ 0,1 ] }, 
+     { name: "W", coords: [ 0,-1 ] } 
+  ];
+
+  const move = dir => {
+    if (robotPath[robotPath.length - 1][0] === dir) robotPath[robotPath.length - 1][1]++;
+    else robotPath.push([dir, 1]);
+    if (grid[robotY][robotX] === "#") grid[robotY][robotX] = "v";
+    switch (dir) {
+      case "N":
+        robotY -= 1;
+        break;
+      case "S":
+        robotY += 1;
+        break;
+      case "E":
+        robotX += 1;
+        break;
+      case "W":
+        robotX -= 1;
+        break;
+      default:
+        console.error("Unknown direction.");
+    }
+  }
+
+  const robotPath = [ ["W", 0] ];
+
+  let end = false;
+  let myDir;
+  while(!end) {
+    if (grid[robotY][robotX] === "O") {
+      move(myDir);
+      move(myDir);
+    }
+    if (grid[robotY][robotX] === "#" || grid[robotY][robotX] === "^") {
+      let tried = 0;
+      for (const dir of dirs) {
+        if (grid[robotY+dir.coords[0]][robotX+dir.coords[1]] === "#") {
+          myDir = dir.name;
+          move(dir.name);
+          break;
+        }
+        if (grid[robotY+dir.coords[0]][robotX+dir.coords[1]] === "O") {
+          myDir = dir.name;
+          move(dir.name);
+          move(dir.name);
+          move(dir.name);
+          break;
+        }
+        tried++;
+      }
+      if (tried === 4) {
+        console.log("Robot final position:", robotY, robotX);
+        end = true;
+      }
+    }
+    if (grid[robotY][robotX] === "v") end = true;
+  }
+}
+
+const drawOutputData = data => {
+  let str = "";
+  let lines = 0;
+  data.forEach(char => {
+    if (char === 10) {
+      console.log(str);
+      str = "";
+      lines++;
+    } else {
+      str += String.fromCharCode(char);
+    }
+  })
+  console.log(lines + " lines total.");
+  console.log("");
+};
 
 const drawGrid = grid => {
   for (let i = 0; i < grid.length; i++) {
@@ -183,10 +276,17 @@ const drawGrid = grid => {
 let runRobot = () => {
   data = prepare(data);
   let outputData = runLoop(data, getInput);
+
+  drawOutputData(outputData);
+  
   const grid = outputDataToGrid(outputData);
   findIntersections(grid);
-  drawGrid(grid);
-  console.log(grid);
+  calculateRobotPath(grid, 27, 51);
+
+  const dustCollected = outputData.pop();
+  console.log("Dust collected:", dustCollected);
+
+  //drawGrid(grid);
 }
 
 runRobot();
