@@ -6,13 +6,13 @@ const prepare = (program) => {
   return program;
 };
 
-const getAllCombinations = (arr) => {
+const getAllPermutations = (arr) => {
   if (arr.length === 1) return [[...arr]];
   const combinations = [];
   arr.forEach((d, index) => {
     let newArr = [...arr];
     newArr.splice(index, 1);
-    getAllCombinations(newArr).forEach((newD) => {
+    getAllPermutations(newArr).forEach((newD) => {
       combinations.push([d, ...newD]);
     });
   });
@@ -114,7 +114,7 @@ const testprogram = prepare(`3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,100
 const findThrusterSignal = (program) => {
   let maxOutput = 0;
   let bestComb;
-  let combs = getAllCombinations([5, 6, 7, 8, 9]);
+  let combs = getAllPermutations([5, 6, 7, 8, 9]);
 
   combs.forEach((comb) => {
     let combArr = [...comb];

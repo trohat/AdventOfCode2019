@@ -6,19 +6,6 @@ const prepare = (program) => {
   return program;
 };
 
-const getAllCombinations = (arr) => {
-  if (arr.length === 1) return [[...arr]];
-  const combinations = [];
-  arr.forEach((d, index) => {
-    let newArr = [...arr];
-    newArr.splice(index, 1);
-    getAllCombinations(newArr).forEach((newD) => {
-      combinations.push([d, ...newD]);
-    });
-  });
-  return combinations;
-};
-
 function runLoop(parProgram, inputFunction) {
   const program = [...parProgram];
   for (let i = 0; i < 1000; i++) {
