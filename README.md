@@ -6,7 +6,9 @@ Codes from [Christmas coding event](https://adventofcode.com/2019).
 
 * getAllPermutations *(gets all permutations of an array)* - day 7
 
-* String.prototype.count *(count character occurences in an array)* - day 8
+* String.prototype.count *(count character occurences in a string)* - day 8
+
+* String.prototype.countChar *(counting characters in a string, another method)* - day 19
 
 * getShortest *(for simplifying fractions - krácení zlomků)* - day 10
 

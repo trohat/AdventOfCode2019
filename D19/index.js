@@ -1,8 +1,15 @@
 console.log("funguju");
 
-Array.prototype.countChar = function(char) {
-  return this.reduce((accumulator, str) => accumulator + str.split(char).length-1, 0);
-} 
+String.prototype.countChar = function (char) {
+  return this.split(char).length-1;
+};
+
+Array.prototype.countChar = function (char) {
+  return this.reduce(
+    (accumulator, str) => accumulator + str.split(char).length - 1,
+    0
+  );
+};
 
 const prepare = (program) => {
   program = program.split(",");
@@ -12,7 +19,7 @@ const prepare = (program) => {
 
 program = prepare(data);
 
-function* createLoopIterator(parProgram, inputFunction) {
+const runLoop = (parProgram, inputFunction) => {
   const program = [...parProgram];
   for (let i = 0; i < 1000; i++) {
     program.push(0);
@@ -69,7 +76,7 @@ function* createLoopIterator(parProgram, inputFunction) {
         break;
       case 4:
         arg1 = getArg(1);
-        yield arg1;
+        return arg1;
         step = 2;
         break;
       case 5:
@@ -121,7 +128,7 @@ function* createLoopIterator(parProgram, inputFunction) {
     if (useStep) position += step;
   }
   return;
-}
+};
 
 const deployDrone = (program) => {
   const inputArray = [];
@@ -132,24 +139,27 @@ const deployDrone = (program) => {
     return inputArray.shift();
   };
 
-  droneLoop: for (let i = 0; i < 500; i++) {
-    let str = "";
-    for (let j = 0; j < 500; j++) {
-      inputArray.push(j, i);
-
-      const loopIterator = createLoopIterator(program, getInput);
-
-      const iteratorResult = loopIterator.next();
-
-      if (iteratorResult.done) {
-        console.log("breaking loop");
-        break droneLoop;
-      }
-      str += iteratorResult.value === 1 ? "#" : ".";
-    }
-    console.log(str);
-    tractorBeam.push(str);
+  const getSignal = (j, i) => {
+    inputArray.push(j, i);
+    return runLoop(program, getInput);
   }
+  
+
+  // iterating by hand
+  const iter = 2065;
+  let i = iter;
+  let str = "";
+  for (let j = 0; j < iter; j++) {
+
+    const result = getSignal(j, i);
+
+    str += result === 1 ? "#" : ".";
+  }
+  console.log(str.countChar("#"));
+  console.log(str);
+  let lastIndex = str.lastIndexOf("#");
+  console.log(lastIndex);
+  console.log("New result: " + getSignal(lastIndex-99, iter+99));
 
   return tractorBeam.countChar("#");
 };
