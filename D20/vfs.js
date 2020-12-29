@@ -38,11 +38,12 @@ const niceWallsHTML = field => {
 }
 
 const nicePortalsHTML = field => {
-    if (field.isWall) return '<span class="wall">    </span>';
+    if (field.isWall) return '<span class="wall">  </span>';
     let className = "";
     if (field.portal) className = "portal-passage";
-    if (field.distance != null) return '<span class="' + className + '">' + field.distance.toString().padEnd(3, " ").padStart(4, " ") + '</span>';
-    if (field.portal) return '<span class="portal-passage"> ' + field.portal.portalName + ' </span>';
-    if (field.isPortal) return '<span class="portal"> ' + field.char + '  </span>';
-    return '<span>    </span>';
+    if (field.pathHere) className += " path";
+    //if (field.distance != null) return '<span class="' + className + '">' + field.distance.toString().padEnd(2, " ").padStart(2, " ") + '</span>';
+    if (field.portal) return '<span class="' + className + '">' + field.portal.portalName + '</span>';
+    if (field.isPortal) return '<span class="portal">' + field.char + ' </span>';
+    return '<span class="' + className + '">  </span>';
 }
