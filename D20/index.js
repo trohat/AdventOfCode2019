@@ -9,7 +9,7 @@ const dirs = [
   { y: 0, x: -1 },
 ];
 
-const prepare = (data) => {
+const prepare = (data, mazeLevels) => {
   const height = data.length;
   let width;
   data = data.map((line) => {
@@ -20,80 +20,70 @@ const prepare = (data) => {
   console.log("Width:", width);
   console.log("Height:", height);
 
-  const maze = [];
+  const map = [];
   let i = 0;
 
   for (const line of data) {
-    maze.push([]);
+    map.push([]);
     let j = 0;
     for (const char of line) {
       const isWall = char === "#";
       const isPortal = /[A-Z]/.test(char);
       const isPassage = char === ".";
-      maze[i].push({
-        char,
-        isWall,
-        isPortal,
-        isPassage,
-        portalized: null,
-        portal: null,
-        distance: null,
-        visited: false,
-        pathHere: false,
-      });
+      map[i].push({ char, isWall, isPortal, isPassage, portalized: null, portal: null, distance: null, visited: false, pathHere: false });
       j++;
     }
-    maze[i].push({ char: " " });
+    map[i].push({ char: " " });
     i++;
   }
 
-  maze.push([]);
+  map.push([]);
   for (let j = 0; j < i; j++) {
-    maze[i].push({ char: " " });
+    map[i].push({ char: " " });
   }
 
   const fieldsToSearch = [];
 
-  const portals = {};
+  const portalsOuter = {};
+  const portalsInner = {};
+
+  let startX, startY;
 
   let y = 0;
-  for (const line of maze) {
+  for (const line of map) {
     let x = 0;
     for (const field of line) {
       if (field.isPortal && !field.portalized) {
         for (const dir of dirs) {
-          if (maze[y + dir.y][x + dir.x].isPortal) {
-            let secondPortalField = maze[y + dir.y][x + dir.x];
+          if (map[y + dir.y][x + dir.x].isPortal) {
+            let secondPortalField = map[y + dir.y][x + dir.x];
             field.portalized = true;
             secondPortalField.portalized = true;
             let portalName = field.char + secondPortalField.char;
 
-            let passagePortal;
             let portalX, portalY;
-            if (maze[y + dir.y + dir.y][x + dir.x + dir.x].isPassage) {
+            if (map[y + dir.y + dir.y][x + dir.x + dir.x].isPassage) {
               portalX = x + dir.x + dir.x;
               portalY = y + dir.y + dir.y;
-            } else if (maze[y - dir.y][x - dir.x].isPassage) {
+            } else if (map[y - dir.y][x - dir.x].isPassage) {
               portalY = y - dir.y;
               portalX = x - dir.x;
             } else console.error("Portal without passage");
-            passagePortal = maze[portalY][portalX];
+            let passagePortal = map[portalY][portalX];
             passagePortal.isPortal = true;
             passagePortal.portalized = true;
             passagePortal.portal = {};
             passagePortal.portal.portalName = portalName;
             passagePortal.portal.beenThrough = false;
+            if (portalY === 2 || portalX === 2 || (height - portalY === 3) || (width - portalX === 3)) passagePortal.portal.outer = true;
+            else passagePortal.outer = false;
             if (portalName === "AA") {
-              fieldsToSearch.push({ y: portalY, x: portalX });
-              passagePortal.visited = true;
-              passagePortal.distance = 0;
-              passagePortal.portal.beenThrough = true;
+              fieldsToSearch.push({ y: portalY, x: portalX, level: 0 });
+              startX = x;
+              startY = y;
             }
-            if (portalName in portals) {
-              portals[portalName].push({ x: portalX, y: portalY });
-            } else {
-              portals[portalName] = [{ x: portalX, y: portalY }];
-            }
+            if (passagePortal.portal.outer) portalsOuter[portalName] = { x: portalX, y: portalY };
+            else portalsInner[portalName] = { x: portalX, y: portalY };
             break;
           }
         }
@@ -103,80 +93,70 @@ const prepare = (data) => {
     y++;
   }
 
-  let backX, backY;
+  console.log(portalsOuter);
+  console.log(portalsInner);
 
-  console.log(portals);
+  let maze = [];
+
+  for (let i = 0; i < mazeLevels; i++) {
+      maze.push([]);
+      for (let j = 0; j < height; j++) {
+          maze[i].push([]);
+          for (let k = 0; k < width; k++) {
+              maze[i][j].push(null);
+          }
+      }
+  }
+
+  maze[0][startY][startX] = 0;
+
+  let maxLevel = 0;
+
+
   while (fieldsToSearch.length > 0) {
-    let { y, x } = fieldsToSearch.shift();
-    let actualField = maze[y][x];
+    let { y, x, level } = fieldsToSearch.shift();
+    let actualField = maze[level][y][x];
+    let foundWay = false;
     for (const dir of dirs) {
-      let newField = maze[y + dir.y][x + dir.x];
-      if (newField.isPassage && !newField.visited) {
-        newField.visited = true;
-        newField.distance = actualField.distance + 1;
-        fieldsToSearch.push({ y: y + dir.y, x: x + dir.x });
+      if (
+        map[y + dir.y][x + dir.x].isPassage &&
+        maze[level][y + dir.y][x + dir.x] === null
+      ) {
+        maze[level][y + dir.y][x + dir.x] = actualField + 1;
+        fieldsToSearch.push({ level: level, y: y + dir.y, x: x + dir.x });
+        foundWay = true;
       }
     }
-    if (actualField.portal && !actualField.portal.beenThrough) {
-      //console.log("gathering info about portal " + actualField.portal.portalName + " at " + x + " " + y);
-      //console.log("Have we been here? " + actualField.portal.beenThrough);
-      if (actualField.portal.portalName == "ZZ") {
-        actualField.pathHere = true;
-        backX = x;
-        backY = y;
-        continue;
+    if (!foundWay && map[y][x].portal) {
+      if (map[y][x].portal.portalName == "ZZ") {
+        if (level === 0) {
+          console.log("Steps: " + actualField);
+          break;
+        } else continue;
       }
-      actualField.portal.beenThrough = true;
-      let newX, newY;
-      for (const portal of portals[actualField.portal.portalName]) {
-        if (portal.x !== x && portal.y !== y) {
-          newX = portal.x;
-          newY = portal.y;
-          //console.log("found second,", newX, newY)
-        }
+      if (map[y][x].portal.portalName == "AA") continue;
+      if (map[y][x].portal.outer && level === 0) continue;
+
+      let portalName = map[y][x].portal.portalName;
+
+      if (map[y][x].portal.outer) {
+        console.log("Returning to level " + (level - 1));
+        let { x: newX, y: newY } = portalsInner[portalName];
+        maze[level - 1][newY][newX] = actualField + 1;
+        fieldsToSearch.push({ level: level - 1, x: newX, y: newY });
+      } else {
+        if (level > 25)  continue;
+        console.log("Going down to level " + (level + 1));
+        let { x: newX, y: newY } = portalsOuter[portalName];
+        maze[level + 1][newY][newX] = actualField + 1;
+        fieldsToSearch.push({ level: level + 1, x: newX, y: newY });  
       }
-      let newField = maze[newY][newX];
-      newField.visited = true;
-      newField.distance = actualField.distance + 1;
-      //console.log(newField, newX, newY);
-      newField.portal.beenThrough = true;
-      fieldsToSearch.push({ x: newX, y: newY });
     }
   }
 
-  let end = false;
+  //drawMapToHTML(map, nicePortalsHTML);
 
-  while (!end) {
-    let newBackX, newBackY;
-    let actualField = maze[backY][backX];
-    for (const dir of dirs) {
-      let newField = maze[backY + dir.y][backX + dir.x];
-      if (newField.distance && newField.distance < actualField.distance) {
-        console.log(newField.distance, actualField.distance);
-        newField.pathHere = true;
-        newBackX = backX + dir.x;
-        newBackY = backY + dir.y;
-      }
-    }
-    if (newBackX === undefined && newBackY === undefined) {
-        if (actualField.portal) {
-            for (const portal of portals[actualField.portal.portalName]) {
-                if (portal.x !== backX && portal.y !== backY) {
-                  newBackX = portal.x;
-                  newBackY = portal.y;
-                  //console.log("found second,", newX, newY)
-                }
-              }
-        }   
-    }
-    if (newBackX === undefined && newBackY === undefined) end = true;
-    backX = newBackX;
-    backY = newBackY;
-  }
-
-  drawMapToHTML(maze, nicePortalsHTML);
-
-  return maze;
+  return map;
 };
 
 const task1 = (data) => {};
@@ -203,7 +183,8 @@ FG..#########.....#
     Z       
     Z      `;
 
-inputdata = prepare(splitLines(inputdata));
+const mazeLevels = 200;
+inputdata = prepare(splitLines(inputdata), mazeLevels);
 
 //testdata = prepare(splitLines(testdata));
 
