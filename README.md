@@ -17,3 +17,7 @@ Codes from [Christmas coding event](https://adventofcode.com/2019).
 * countPythagoras *(counts the hypotenuse of a right-angled triangle)* - day 10
 
 * factorizeToPrimes *(factorizes number to primes - rozloží číslo na prvočísla)* - day 12
+
+* myOwnTimesAndModulo *(counts the result of a * b % c, if there is a risk of overflowing MAX_SAFE_INTEGER)* - day 22
+
+ * computeExtendedEuclides *(counts result of extended Eucleidean algorithm - useful for inverse modulo of product)* - day 22

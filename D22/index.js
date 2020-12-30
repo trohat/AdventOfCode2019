@@ -1,5 +1,43 @@
 console.log("funguju");
 
+const computeExtendedEuclides = (a,b) => {
+  if (b === 0) return [a, 1, 0];
+  let i = 0;
+  let alfa2 = 1;
+  let alfa1 = 0;
+  let beta2 = 0;
+  let beta1 = 1;
+  let storeAlfa1, storeBeta1;
+  while (b > 0) {
+    r = a % b;
+    q = Math.floor(a / b);
+    storeAlfa1 = alfa1;
+    storeBeta1 = beta1;
+    alfa1 = alfa2 - q * alfa1;
+    beta1 = beta2 - q * beta1;
+    alfa2 = storeAlfa1;
+    beta2 = storeBeta1;
+    a = b;
+    b = r;
+  }
+  return [ a, alfa2, beta2 ];
+}
+
+
+// counts the result of (a * b) % c 
+// if there is risk of overflow with a * b
+// preconditions: a, b and c have to be positive (not tested in other cases)
+const myOwnTimesAndModulo = (a,b,c) => {
+  b = b.toString();
+  let x = 0;
+  for (let i = 0; i < b.length; i++) {
+    x = x * 10;
+    x = x + (a * +b[i]);
+    x = x % c;
+  }
+  return x;
+}
+
 const splitLines = (data) => data.split(String.fromCharCode(10));
 
 const prepare = data => {
@@ -28,14 +66,14 @@ const prepare = data => {
     return data;
 };
 
-const task1 = (instructions, task, sCard) => {
+const task1 = (instructions, task) => {
     const makeNewInstructions = (instructionsToReduce, count) => {
       if (instructionsToReduce[0].type === "increment") {
         //console.log("This should be increment: " + instructionsToReduce[1].type);
         return [
           {
             type: "increment",
-            number: (instructionsToReduce[0].number * instructionsToReduce[1].number) % count,
+            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count)  // rewrite
           },
         ];
       }
@@ -56,7 +94,7 @@ const task1 = (instructions, task, sCard) => {
           },
           {
             type: "cut",
-            number: (instructionsToReduce[0].number * instructionsToReduce[1].number) % count,
+            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count) // rewrite
           }
         ]
       }
@@ -106,24 +144,29 @@ const task1 = (instructions, task, sCard) => {
             }
             ordered = true;
         }
-
         return instructions;
     }
 
 
     let deck = 10007;
     let card = 3589;
+    let divisor = 1;
+    let repetitions = 1;
     if (task === "test") deck = 10;
     if (task === "test") card = sCard;
+    
     if (task === "task2") deck = 119315717514047;
     if (task === "task2") card = 2020;
-    instructions = reduceInstructions(instructions, deck);
-    
-    const baseInstructions = [ ...instructions ];
-    
-    let finishedInstructions = [];
-    let repetitions = 1;
     if (task === "task2") repetitions = 101741582076661;
+    
+    //if (task === "task2") divisor = 10e11;
+
+
+    instructions = reduceInstructions(instructions, deck);
+    console.log("Instructions after first reduce:")
+    console.table(instructions);
+    const baseInstructions = [ ...instructions ];
+    let finishedInstructions = [];
     while (repetitions > 0) {
       let many = 1;
       instructions = [ ...baseInstructions];
@@ -131,13 +174,16 @@ const task1 = (instructions, task, sCard) => {
         many *= 2;
         instructions = reduceInstructions(instructions.concat(instructions), deck);
       }
-      console.log("Many:", many, " Repetitions:", repetitions, " After subtracting:", repetitions-many);
+      //console.log("Many:", many, " Repetitions:", repetitions, " After subtracting:", repetitions-many);
       repetitions = repetitions - many;
       finishedInstructions = finishedInstructions.concat(instructions);
     }
     finishedInstructions = reduceInstructions(finishedInstructions, deck);
-    console.log(finishedInstructions);
     instructions = [ ...finishedInstructions];
+
+    console.log("");
+    console.log("Final instructions:")
+    console.table(instructions);
     
     for (let i = instructions.length - 1; i >= 0; i--) {
         let instr = instructions[i];
@@ -148,18 +194,12 @@ const task1 = (instructions, task, sCard) => {
           case "increment":
             console.log("starting increment")
             let inc = instr.number;
-            let step = 0;
-            let steps = 0;
-            while (step !== card) {
-              step += inc;
-              steps++;
-              if (step >= deck) {
-                step -= deck;
-              }
-              //console.log("Card:", card / 10e12, "Inc:", inc / 10e12, "Step:", step / 10e12);
-            }
-            console.log("ending increment")
-            card = steps;
+            console.log("Inc:", inc / divisor, "Deck", deck / divisor, "Card:", card /divisor);
+            let [ one, s, t] = computeExtendedEuclides(inc, deck);
+          
+            console.log("One", one, "s", s / divisor, "t", t);
+            card = myOwnTimesAndModulo(s, card, deck);
+            console.log("ending increment, card is " + card);
             break;
           case "cut":
             let cut = instr.number;
@@ -173,13 +213,8 @@ const task1 = (instructions, task, sCard) => {
         }
     }
     
-
     return card;
 };
-
-const task2 = data => {
-    
-}
 
 let testdata = `deal into new stack
 cut -2
@@ -195,10 +230,8 @@ console.time();
 instructions = prepare(splitLines(inputdata));
 
 
-//testinstructions = prepare(splitLines(testdata));
+testinstructions = prepare(splitLines(testdata));
 //console.log(instructions);
-
-console.log("");
 
 //doEqualTest(task1(testinstructions, "test", 0), 2);
 
