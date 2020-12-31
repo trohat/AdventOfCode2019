@@ -73,7 +73,7 @@ const task1 = (instructions, task) => {
         return [
           {
             type: "increment",
-            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count)  // rewrite
+            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count)  // rewritten
           },
         ];
       }
@@ -94,7 +94,7 @@ const task1 = (instructions, task) => {
           },
           {
             type: "cut",
-            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count) // rewrite
+            number: myOwnTimesAndModulo(instructionsToReduce[0].number, instructionsToReduce[1].number, count) // rewritten
           }
         ]
       }
