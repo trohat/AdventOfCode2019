@@ -8,6 +8,7 @@ const prepare = (program) => {
 
 program = prepare(data);
 
+// opcode variant: generator with empty yield
 function* createLoopIterator(parProgram, compIndex, inputFunction, outputFunction) {
   const program = [...parProgram];
   for (let i = 0; i < 1000; i++) {

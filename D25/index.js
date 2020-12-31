@@ -6,19 +6,20 @@ const prepare = (program) => {
   return program;
 };
 
-// opcode variant: simple loop receiving instructions
-function runLoop(parProgram, inputFunction) {
+program = prepare(data);
+
+// opcode variant: generator for working from console
+function* createLoopIterator(parProgram, inputFunction) {
   const program = [...parProgram];
   for (let i = 0; i < 1000; i++) {
     program.push(0);
   }
   let position = 0;
   let relativeBase = 0;
-  const outputs = [];
+  let outputs = [];
 
-  const writeOutput = output => outputs.push(output);
-
-  mainLoop: while (true) {
+  let end = false;
+  mainLoop: while (!end) {
     const getOpcodeAndModes = (instruction) => {
       opcode = instruction % 100;
       modes = ((instruction - opcode) / 100).toString().split("");
@@ -67,7 +68,11 @@ function runLoop(parProgram, inputFunction) {
         break;
       case 4:
         arg1 = getArg(1);
-        writeOutput(arg1);
+        outputs.push(arg1);
+        if (arg1 === 63 && outputs[outputs.length - 2] === 100 && outputs[outputs.length - 3] === 110) {
+          yield outputs;
+          outputs = [];
+        }
         step = 2;
         break;
       case 5:
@@ -121,33 +126,31 @@ function runLoop(parProgram, inputFunction) {
   return outputs;
 }
 
+let strGlobal;
 let inputN = -1;
-const getInput = () => {
+
+const setInstruction = instruction => {
   const nl = "\n";
-  const str = `NOT B J
-  NOT C T
-  OR T J
-  AND D J
-  AND H J
-  NOT A T
-  OR T J
-  RUN
-  `;
+  strGlobal = instruction + nl;
+  inputN = -1
+  runRobot();
+}
+
+const getInput = () => {
   inputN++;
-  //console.log("giving input", str.charCodeAt(inputN) )
-  return str.charCodeAt(inputN);
+  return strGlobal.charCodeAt(inputN);
 };
 
+let loopIterator;
+
+const prepareRobot = program => {
+  loopIterator = createLoopIterator(program, getInput);
+}
+
 let runRobot = () => {
-  data = prepare(data);
-  let outputData = runLoop(data, getInput);
-
+  console.log("Running");
+  let outputData = loopIterator.next().value;
   drawOutputData(outputData);
-  console.log("Hull damage: " + outputData.pop())
-  //const dustCollected = outputData.pop();
-  //console.log("Dust collected:", dustCollected);
-
-  //drawGrid(grid);
 }
 
 const drawOutputData = data => {
@@ -155,15 +158,16 @@ const drawOutputData = data => {
   let lines = 0;
   data.forEach(char => {
     if (char === 10) {
-      console.log(str.length, str);
+      console.log(str);
       str = "";
       lines++;
     } else {
       str += String.fromCharCode(char);
     }
   })
-  console.log(lines);
+  console.log(str);
 };
 
+prepareRobot(program);
 runRobot();
 
