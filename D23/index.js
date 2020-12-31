@@ -128,6 +128,10 @@ function* createLoopIterator(parProgram, compIndex, inputFunction, outputFunctio
 const runComputers = program => {
   let inputs = [];
   let end = false;
+  let natX, natY;
+  let lastNatY;
+  let watchNat = false;
+  let emptyQueues = new Set();
 
   for (let i = 0; i < 50; i++) {
     inputs.push([i]);
@@ -135,15 +139,32 @@ const runComputers = program => {
   console.log(inputs);
 
   const getInput = compIndex => {
-    if (inputs[compIndex].length === 0) return -1;
+    if (inputs[compIndex].length === 0) { 
+      if (watchNat) {
+        emptyQueues.add(compIndex);
+        if (emptyQueues.size === 50) {
+          emptyQueues.clear();
+          inputs[0].push(natX, natY);
+          if (lastNatY === natY) {
+            end = true;
+            console.log("Y packet delivered twice is " + natY + ".");
+          }
+          lastNatY = natY;
+        }
+      }
+      return -1;
+    }
+    emptyQueues.clear();
     return inputs[compIndex].shift();
   };
 
   const writeOutputs = outputs => {
     const [ addr, x, y ] = outputs;
     if (addr === 255) {
-      end = true;
-      console.log("Output at address 255 is " + y + ".");
+      natX = x;
+      natY = y;
+      watchNat = true;
+      console.log("NAT set to " + x + " and " + y + ".");
     }
     else inputs[addr].push(x, y);
   }
