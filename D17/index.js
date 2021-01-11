@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 17: Set and Forget");
 
 const prepare = (program) => {
   program = program.split(",");

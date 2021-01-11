@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 6: Universal Orbit Map");
 
 const testdata = `COM)B11
 B11)C11

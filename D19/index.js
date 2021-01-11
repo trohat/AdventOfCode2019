@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 19: Tractor Beam");
 
 String.prototype.countChar = function (char) {
   return this.split(char).length-1;

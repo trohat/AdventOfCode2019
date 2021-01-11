@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 4: Secure Container");
 
 const start = 145852;
 

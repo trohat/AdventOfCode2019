@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 14: Space Stoichiometry");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

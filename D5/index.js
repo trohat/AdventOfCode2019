@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 5: Sunny with a Chance of Asteroids");
 
 const prepare = data => {
   data = data.split(",");

@@ -1,4 +1,4 @@
-console.log("funguju");
+console.log("AOC 2018 - Day 13: Care Package");
 
 const prepare = (program) => {
   program = program.split(",");
