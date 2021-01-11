@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 10: Monitoring Station");
+console.log("AOC 2019 - Day 10: Monitoring Station");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

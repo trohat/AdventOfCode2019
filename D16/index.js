@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 16: Flawed Frequency Transmission");
+console.log("AOC 2019 - Day 16: Flawed Frequency Transmission");
 
 const prepare = data => data.repeat(10000);
 

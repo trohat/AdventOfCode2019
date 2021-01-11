@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 18: Many-Worlds Interpretation");
+console.log("AOC 2019 - Day 18: Many-Worlds Interpretation");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

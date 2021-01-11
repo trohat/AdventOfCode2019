@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 23: Category Six");
+console.log("AOC 2019 - Day 23: Category Six");
 
 const prepare = (program) => {
   program = program.split(",");

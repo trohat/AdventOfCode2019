@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 11: Space Police");
+console.log("AOC 2019 - Day 11: Space Police");
 
 const prepare = (program) => {
   program = program.split(",");

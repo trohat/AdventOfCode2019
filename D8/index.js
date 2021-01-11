@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 8: Space Image Format");
+console.log("AOC 2019 - Day 8: Space Image Format");
 
 String.prototype.count=function(c) { 
     var result = 0, i = 0;

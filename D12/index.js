@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 12: The N-Body Problem");
+console.log("AOC 2019 - Day 12: The N-Body Problem");
 
 const factorizeToPrimes = (number) => {
   const primes = [];

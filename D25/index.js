@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 25: Cryostasis");
+console.log("AOC 2019 - Day 25: Cryostasis");
 
 const prepare = (program) => {
   program = program.split(",");

@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 24: Planet of Discord");
+console.log("AOC 2019 - Day 24: Planet of Discord");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

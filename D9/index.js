@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 9: Sensor Boost");
+console.log("AOC 2019 - Day 9: Sensor Boost");
 
 const prepare = (program) => {
   program = program.split(",");

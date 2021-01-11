@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 20: Donut Maze");
+console.log("AOC 2019 - Day 20: Donut Maze");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

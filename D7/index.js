@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 7: Amplification Circuit");
+console.log("AOC 2019 - Day 7: Amplification Circuit");
 
 const prepare = (program) => {
   program = program.split(",");

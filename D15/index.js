@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 15: Oxygen System");
+console.log("AOC 2019 - Day 15: Oxygen System");
 
 const prepare = (program) => {
   program = program.split(",");

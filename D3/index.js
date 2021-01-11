@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 3: Crossed Wires");
+console.log("AOC 2019 - Day 3: Crossed Wires");
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 

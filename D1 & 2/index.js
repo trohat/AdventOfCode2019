@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 1: The Tyranny of the Rocket Equation & Day 2: 1202 Program Alarm");
+console.log("AOC 2019 - Day 1: The Tyranny of the Rocket Equation & Day 2: 1202 Program Alarm");
 /*
 data = data.split(String.fromCharCode(10));
 

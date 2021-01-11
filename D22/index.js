@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 22: Slam Shuffle");
+console.log("AOC 2019 - Day 22: Slam Shuffle");
 
 const computeExtendedEuclides = (a,b) => {
   if (b === 0) return [a, 1, 0];

@@ -1,4 +1,4 @@
-console.log("AOC 2018 - Day 17: Set and Forget");
+console.log("AOC 2019 - Day 17: Set and Forget");
 
 const prepare = (program) => {
   program = program.split(",");
