@@ -10,7 +10,7 @@ Codes from [Christmas coding event](https://adventofcode.com/2019).
 
 * String.prototype.countChar *(counting characters in a string, another method)* - day 19
 
-* getShortest *(for simplifying fractions - krácení zlomků)* - day 10
+* simplifyFraction *(simplifies fraction - vykrátí zlomek)* - day 10
 
 * getAngle *(counts angle from x and y coords with atan function)* - day 10
 

@@ -12,7 +12,7 @@ const prepare = (data) => {
   return set;
 };
 
-const getShortest = (x, y) => {
+const simplifyFraction = (x, y) => {
   const primes = [ 2,3,5,7,11,13,17,19,23,29,31,37];
   let end = false;
   while (!end) {
@@ -57,7 +57,7 @@ const task1 = set => {
       if (asteroidX === stationX && asteroidY === stationY) return;
       const xDist = asteroidX - stationX;
       const yDist = asteroidY - stationY;
-      letMeSee.add(getShortest(xDist, yDist));
+      letMeSee.add(simplifyFraction(xDist, yDist));
     })
     if (letMeSee.size >= maxSeen) { maxSeen = letMeSee.size; bestX = stationX; bestY = stationY; }
   });
