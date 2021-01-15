@@ -14,10 +14,6 @@ const factorizeToPrimes = (number) => {
 
 const splitLines = (data) => data.split(String.fromCharCode(10));
 
-let xPositions = [];
-let yPositions = [];
-let zPositions = [];
-
 const compareArrays = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
     let same = true;
@@ -28,15 +24,19 @@ const compareArrays = (arr1, arr2) => {
 };
 
 Array.prototype.arrayFieldsToNumbers = function () {
-    return this.map((f) => +f);
+    return this.map(f => +f);
 };
 
 const prepare = (data) => {
+    let xPositions = [];
+    let yPositions = [];
+    let zPositions = [];
     const re = /x=([+-]?\d+), y=([+-]?\d+), z=([+-]?\d+)/;
     data.forEach((line, index) => [, xPositions[index], yPositions[index], zPositions[index]] = re.exec(line));
     xPositions = xPositions.arrayFieldsToNumbers();
     yPositions = yPositions.arrayFieldsToNumbers();
     zPositions = zPositions.arrayFieldsToNumbers();
+    return [ xPositions, yPositions, zPositions];
 };
 
 const countCycle = (positions) => {
@@ -72,37 +72,56 @@ const countCycle = (positions) => {
     return steps;
 };
 
-const task2 = () => {
+const task2 = ([ xPositions, yPositions, zPositions]) => {
     const repeatX = countCycle(xPositions);
     const repeatY = countCycle(yPositions);
     const repeatZ = countCycle(zPositions);
-    console.log(factorizeToPrimes(repeatX));
-    console.log(factorizeToPrimes(repeatY));
-    console.log(factorizeToPrimes(repeatZ));
+
+    let primesX = factorizeToPrimes(repeatX);
+    let primesY = factorizeToPrimes(repeatY);
+    let primesZ = factorizeToPrimes(repeatZ);
+
+    // finding lcm
+    let result = 1;
+    for (const n of primesX) {
+        result *= n;
+        if (primesY.includes(n)) {
+            primesY.splice(primesY.indexOf(n), 1);
+        }
+        if (primesZ.includes(n)) {
+            primesZ.splice(primesZ.indexOf(n), 1);
+        }
+    }
+    for (const n of primesY) {
+        result *= n;
+        if (primesZ.includes(n)) {
+            primesZ.splice(primesZ.indexOf(n), 1);
+        }
+    }
+    for (const n of primesZ) result *= n;
+
+    return result;
 };
 
-let testdata1 = `<x=-8, y=-10, z=0>
-<x=5, y=5, z=10>
-<x=2, y=-7, z=3>
-<x=9, y=-8, z=-3>`;
-
-let testdata2 = `<x=-1, y=0, z=2>
+let testdata1 = `<x=-1, y=0, z=2>
 <x=2, y=-10, z=-7>
 <x=4, y=-8, z=8>
 <x=3, y=5, z=-1>`;
+
+let testdata2 = `<x=-8, y=-10, z=0>
+<x=5, y=5, z=10>
+<x=2, y=-7, z=3>
+<x=9, y=-8, z=-3>`;
 
 console.log("");
 
 testdata1 = prepare(splitLines(testdata1));
 testdata2 = prepare(splitLines(testdata2));
-doEqualTest(task2(testdata2), 179);
-
-//inputdata = prepare(splitLines(inputdata));
-
+doEqualTest(task2(testdata1), 2772);
+doEqualTest(task2(testdata2), 4686774924);
 //console.log("Task 1: " + task1(inputdata, 1000));
 
 console.log("");
 
-//doEqualTest(task2(testdata), 2772);
-
-//console.log("Task 2: " + task2(inputdata));
+inputdata = prepare(splitLines(inputdata));
+console.log("Task 2: " + task2(inputdata));
