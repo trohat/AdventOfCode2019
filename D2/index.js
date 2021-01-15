@@ -1,23 +1,9 @@
-console.log("AOC 2019 - Day 1: The Tyranny of the Rocket Equation & Day 2: 1202 Program Alarm");
-/*
-data = data.split(String.fromCharCode(10));
+console.log("AOC 2019 - Day 2: 1202 Program Alarm");
 
-data = data.map(d => +d);
-
-const v = data.reduce((accumulator, value) => {
-    actualFuel = value;
-    totalFuel = -value;
-    while (actualFuel > 0) {
-        totalFuel += actualFuel;
-        actualFuel = (Math.floor(actualFuel / 3) - 2);
-    }
-    return accumulator + totalFuel;
-}, 0);
-
-console.log(v);
-*/
 data = data.split(",");
+
 data = data.map((d) => +d);
+
 const saveData = [...data];
 
 for (let i = 0; i < 100; i++)
