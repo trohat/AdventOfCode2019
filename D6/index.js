@@ -51,15 +51,6 @@ const task1 = data => {
     return Object.keys(orbits).reduce((accumulator, currentValue) => accumulator + orbits[currentValue].distance, 0);
 }
 
-countNeighbours = (actPlanet, distance) => {
-    const planet = orbits[actPlanet];
-    planet.distance = distance;
-    if (planet.children === undefined) return;
-    for (let i = 0; i < planet.children.length; i++) {
-        countNeighbours(planet.children[i], distance + 1);
-    }
-}
-
 const task2 = orbits => {
     getTravelToBegin = (actPlanet) => {
         const planet = orbits[actPlanet];

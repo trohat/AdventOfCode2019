@@ -14,6 +14,7 @@ loopOut: for (let pass = start; pass < end; pass++) {
         if (arr[i-1] > arr[i]) continue loopOut;
         if (arr[i-1] === arr[i]) {
             const n = arr[i];
+            // hey, its possible to omit first part of both conditions!
             if (i > 1 && arr[i-2] === n) continue;
             if (i < 5 && arr[i+1] === n) continue;
             same = 1;

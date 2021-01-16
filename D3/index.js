@@ -1,13 +1,13 @@
 console.log("AOC 2019 - Day 3: Crossed Wires");
 
-const splitLines = (data) => data.split(String.fromCharCode(10));
+const splitLines = data => data.split(String.fromCharCode(10));
 
-const prepare1 = (data) => data.map((d) => d.split(","));
+const prepare1 = data => data.map(d => d.split(","));
 
-const prepare2 = (data) => {
+const prepare2 = data => {
     const re = /([RDUL])(\d+)/;
-    return data.map((d) =>
-        d.map((i) => {
+    return data.map(d =>
+        d.map(i => {
             const [, direction, distance] = re.exec(i);
             return {
                 direction,
@@ -99,11 +99,11 @@ const draw = (data) => {
             mark(posX + leftDistance, posY + downDistance, mark2, steps);
         }
     };
-    data[0].forEach((i) => walkThrough(i, false));
+    data[0].forEach(i => walkThrough(i, false));
     posX = 0;
     posY = 0;
     steps = 0;
-    data[1].forEach((i) => walkThrough(i, true));
+    data[1].forEach(i => walkThrough(i, true));
 
     return field;
 };

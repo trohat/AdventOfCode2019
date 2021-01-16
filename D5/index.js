@@ -6,7 +6,8 @@ const prepare = data => {
   return data;
 }
 
-const runLoop = (data, inputFunction) => {
+const runLoop = (pdata, inputFunction) => {
+  let data = [ ...pdata ];
   let position = 0;
   const outputs = [];
 
@@ -16,7 +17,7 @@ const runLoop = (data, inputFunction) => {
     const getOpcodeAndModes = (instruction) => {
       opcode = instruction % 100;
       modes = ((instruction - opcode) / 100).toString().split("");
-      modes = modes.map((m) => +m).reverse();
+      modes = modes.map(m => +m).reverse();
     };
 
     const getArg = (i) => {
@@ -99,6 +100,15 @@ const runLoop = (data, inputFunction) => {
 
 const testdata = `3,3,1107,-1,8,3,4,3,99`;
 
-const getInput = () => 9;
+data = prepare(data);
 
-console.log(runLoop(prepare(testdata), getInput));
+const task = (data, input) => {
+  const getInput = () => input;
+  let outputs = runLoop(data, getInput);
+  return outputs[outputs.length - 1];
+};
+
+console.log("");
+
+console.log("Task 1: " + task(data, 1));
+console.log("Task 2: " + task(data, 5));
