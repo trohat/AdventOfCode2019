@@ -273,7 +273,7 @@ const findMax = maze => {
   let myI, myJ;
   for (let i = 0; i < maze.length; i++) {
     for (let j = 0; j < maze[0].length; j++) {
-      if (maze[i][j].lowest !== false && maze[i][j].lowest > max) {
+      if (maze[i][j].lowest && maze[i][j].lowest > max) {
           max = maze[i][j].lowest; 
           myI = i;
           myJ = j;

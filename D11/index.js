@@ -175,15 +175,15 @@ const runRobot = program => {
 }
 
 const draw = pattern => {
+  let str = "";
   for (let j = 8; j > -9; j--) {
-    let str = "";
     for (let i = -5; i < 50; i++) {
       let pos = [i,j].toString();
-      if (pattern.has(pos)) str += "X"; else str += " ";
+      if (pattern.has(pos)) str += "█"; else str += " ";
     }
-    console.log(str);
+    str += "\n";
   }
-  
+  console.log(str);
 }
 
 draw(runRobot(program));

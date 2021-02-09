@@ -36,7 +36,7 @@ const task2 = data => {
         let j = 0;
         while (data[j].charAt(i) === "2") j++;
         if (data[j].charAt(i) === "0") image += " ";
-        else image += data[j].charAt(i);
+        else image += "█";
     }
     return prepare(image, 25);
 }

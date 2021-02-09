@@ -21,7 +21,7 @@ inputdata = prepare(splitLines(inputdata));
 
 //console.log(inputdata);
 
-const task1 = (data, materialToGet, leftovers) => {
+const task1 = (reactions, materialToGet, leftovers) => {
     const materialsToGet = [ { materialName: materialToGet, materialAmount: 1 } ];
     let oreAmount = 0;
     //leftovers = {};
@@ -40,16 +40,16 @@ const task1 = (data, materialToGet, leftovers) => {
                 delete leftovers[mName];
             }
         }
-        let producedAmount = data[mName].amount;
+        let producedAmount = reactions[mName].amount;
         let timesToProduce = 1;
         while (producedAmount < mNeeded) { 
-            producedAmount += data[mName].amount;
+            producedAmount += reactions[mName].amount;
             timesToProduce++;
         }
         if (producedAmount > mNeeded)  {
             leftovers[mName] = producedAmount - mNeeded;
         }
-        data[mName].raws.forEach( raw => {
+        reactions[mName].raws.forEach( raw => {
             if (raw.raw === "ORE") oreAmount += raw.amount * timesToProduce;
             else {
                 materialsToGet.push({ materialName: raw.raw, materialAmount: raw.amount * timesToProduce});
@@ -59,12 +59,12 @@ const task1 = (data, materialToGet, leftovers) => {
     return [ oreAmount, leftovers];
 };
 
-const task2 = data => {
+const task2 = reactions => {
     let fuel = 0;
     let ore = 1000000000000;
     let leftovers = {};
     while (ore > 0) {
-        const arr = task1(data,"FUEL", leftovers);
+        const arr = task1(reactions,"FUEL", leftovers);
         fuel+= 1;
         ore -= arr[0];
         leftovers = arr[1];

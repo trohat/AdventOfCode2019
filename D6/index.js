@@ -37,16 +37,16 @@ const task1 = data => {
         if (!("parent" in b)) return 1;
         return 0 //a.children.length - b.children.length;
     });*/
-    countNeighbours = (actPlanet, distance) => {
+    countDistance = (actPlanet, distance) => {
         const planet = orbits[actPlanet];
         planet.distance = distance;
         if (planet.children === undefined) return;
         for (let i = 0; i < planet.children.length; i++) {
-            countNeighbours(planet.children[i], distance + 1);
+            countDistance(planet.children[i], distance + 1);
         }
     }
 
-    countNeighbours("COM", 0);
+    countDistance("COM", 0);
 
     return Object.keys(orbits).reduce((accumulator, currentValue) => accumulator + orbits[currentValue].distance, 0);
 }

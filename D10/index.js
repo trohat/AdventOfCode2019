@@ -82,7 +82,7 @@ const task1 = (set) => {
 
 const task2 = (set, stationX, stationY, position) => {
     const angles = new Set();
-    const anglesAndAsteroids = new Map();
+    const anglesAndAsteroids = {};
     set.forEach((asteroid) => {
         const [asteroidY, asteroidX] = asteroid;
         if (asteroidX === stationX && asteroidY === stationY) return;

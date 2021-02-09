@@ -69,7 +69,6 @@ const prepare = data => {
 const task1 = (instructions, task) => {
     const makeNewInstructions = (instructionsToReduce, count) => {
       if (instructionsToReduce[0].type === "increment") {
-        //console.log("This should be increment: " + instructionsToReduce[1].type);
         return [
           {
             type: "increment",
@@ -86,7 +85,6 @@ const task1 = (instructions, task) => {
             }
           ]
         }
-        //console.log("This should be increment: " + instructionsToReduce[1].type);
         return [
           {
             type: "increment",
@@ -98,7 +96,6 @@ const task1 = (instructions, task) => {
           }
         ]
       }
-      //console.log("This should be reverse: " + instructionsToReduce[0].type);
       if (instructionsToReduce[1].type === "reverse") {
         return [];
       }
@@ -113,7 +110,6 @@ const task1 = (instructions, task) => {
           }
         ];
       }
-      //console.log("This should be increment: " + instructionsToReduce[1].type);
       let x = instructionsToReduce[1].number;
       return  [
         {
